@@ -1,5 +1,8 @@
 package ATM;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ClientDAO {
 	private Client[] clList;
 	private int number;
@@ -35,6 +38,7 @@ public class ClientDAO {
 	}
 	//아이디 인덱스
 	private int checkIndexID(String id) {
+		if(clList == null) return -1;
 		for(int i = 0; i < clList.length; i+=1){
 			if(clList[i].id.equals(id)) {
 				return i;
@@ -111,6 +115,29 @@ public class ClientDAO {
 				}
 			}
 		}
+	}// 패턴 아이디
+	private boolean idpattern(String id) {
+		String idPatter = "^[a-z]{1}[a-z0-9]{5,10}$";
+		Pattern p = Pattern.compile(idPatter);
+		Matcher m = p.matcher(id);
+		if(m.matches()) {
+			System.out.println("id 맞는 표현입니다.");
+			return true;
+		}
+		System.out.println("id 틀린표현 표현입니다.");
+		return false;
+	}
+	// 패턴 비밀번호
+	private boolean pwpattern(String pw) {
+		String pwPatter = "^[a-z0-9]{4,10}$";
+		Pattern p = Pattern.compile(pwPatter);
+		Matcher m = p.matcher(pw);
+		if(m.matches()) {
+			System.out.println("pw 맞는 표현입니다.");
+			return true;
+		}
+		System.out.println("pw 틀린표현 표현입니다.");
+		return false;
 	}
 	//추가
 	//추가할 유저 이름 아이디 비밀번호
@@ -122,7 +149,13 @@ public class ClientDAO {
 			System.out.println("id가 중복되었습니다.");
 			return;
 		}
+		if(!idpattern(id)) {
+			return;
+		}
 		String pw = Util.getValueString("비밀번호 입력 : ");
+		if(!pwpattern(pw)) {
+			return;
+		}
 		String name = Util.getValueString("이름 입력 : ");
 		Client c = new Client(number,id,pw,name);
 		init(c);

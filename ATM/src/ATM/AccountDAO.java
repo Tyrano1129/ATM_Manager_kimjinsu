@@ -1,5 +1,8 @@
 package ATM;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AccountDAO {
 	private Account[] accList;
 	
@@ -76,17 +79,15 @@ public class AccountDAO {
 	}
 	//계좌번호 예외찾기
 	private boolean accountCheck(String accNum) {
-		if(accNum.length() != 14) {
-			System.out.println("1111-1111-1111 방식으로 입력해주세요.");
+		String accPattern = "^\\d{4}-\\d{4}-\\d{4}$";
+		Pattern p = Pattern.compile(accPattern);
+		Matcher m = p.matcher(accNum);
+		if(m.matches()) {
+			return true;
+		}else {
+			System.out.println("1111-1111-1111형식으로 입력해주세요.");
 			return false;
 		}
-		for(int i = 0; i < accNum.length(); i+=1) {
-			if(((int)accNum.charAt(i) < 48 && (int)accNum.charAt(i) > 57) || accNum.charAt(4) != '-' || accNum.charAt(9) != '-') {
-				System.out.println("1111-1111-1111 방식으로 입력해주세요.");
-				return false;
-			}
-		}
-		return true;
 	}
 	//자신의 계좌가 있는지 없는지 확인
 	private boolean checkAcccount(String id) {
